@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,20 @@
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap' rel='stylesheet'>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/icon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        mark {
+            background-color: #ffeb3b;
+            color: #000;
+            padding: 0 2px;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+    </style>
 </head>
+
 <body>
     <div class="background-pattern"></div>
-    
+
     <!-- Top Navigation -->
     <nav class="top-nav">
         <div class="nav-left">
@@ -19,14 +30,14 @@
         <div class="nav-right">
             <button class="nav-btn" onclick="showUploadModal()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 4v16m8-8H4"/>
+                    <path d="M12 4v16m8-8H4" />
                 </svg>
                 <span>Upload Documents</span>
             </button>
             <button class="nav-btn" onclick="showConfigModal()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M12 1v6m0 6v6M1 12h6m6 0h6"/>
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M12 1v6m0 6v6M1 12h6m6 0h6" />
                 </svg>
                 <span>Configure</span>
             </button>
@@ -37,26 +48,23 @@
         <!-- Main Search Area (Google-style) -->
         <div class="search-main">
             <h1 class="search-logo">Context Search</h1>
-            
+
             {% if not has_documents %}
             <p class="no-docs-message">Please upload some documents to start searching</p>
             {% endif %}
-            
+
             <div class="search-wrapper">
                 <div class="search-input-container">
-                    <svg class="search-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    <svg class="search-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        placeholder="Search across your documents..." 
-                        autocomplete="off"
-                        {% if not has_documents %}disabled{% endif %}
-                    >
+                    <input type="text" id="searchInput" placeholder="Search across your documents..." autocomplete="off"
+                        list="searchSuggestions" {% if not has_documents %}disabled{% endif %}>
+                    <datalist id="searchSuggestions"></datalist>
                     <button id="clearBtn" class="clear-btn" style="display:none;" onclick="clearSearch()">×</button>
                 </div>
-                
+
                 {% if has_documents %}
                 <div class="search-controls">
                     <div class="search-info">
@@ -75,7 +83,7 @@
 
             <!-- Search Results -->
             <div id="searchResults" class="search-results"></div>
-            
+
             <!-- Stats (if no search active) -->
             {% if has_documents %}
             <div id="statsSection" class="stats-section">
@@ -102,10 +110,15 @@
 
     <div id="toast" class="toast"></div>
 
+    <script id="app-config" type="application/json">
+        {{ config | tojson | safe }}
+    </script>
+
     <script>
-        const hasDocuments = {{ 'true' if has_documents else 'false' }};
+        // Wrapped in quotes to prevent IDE JavaScript parser errors
+        const hasDocuments = "{{ 'true' if has_documents else 'false' }}" === "true";
         let searchTimeout = null;
-        let currentConfig = {{ config|tojson }};
+        let currentConfig = JSON.parse(document.getElementById('app-config').textContent);
 
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
@@ -144,10 +157,19 @@
             const resultsDiv = document.getElementById('searchResults');
             const statsSection = document.getElementById('statsSection');
 
-            searchInput.addEventListener('input', () => {
+            searchInput.addEventListener('input', async () => {
                 const query = searchInput.value.trim();
                 clearBtn.style.display = query ? 'block' : 'none';
-                
+
+                if (query.length >= 2) {
+                    try {
+                        const res = await fetch(`/suggest?q=${encodeURIComponent(query)}`);
+                        const suggestions = await res.json();
+                        const datalist = document.getElementById('searchSuggestions');
+                        datalist.innerHTML = suggestions.map(s => `<option value="${s}">`).join('');
+                    } catch (e) { }
+                }
+
                 clearTimeout(searchTimeout);
                 if (query.length >= 3) {
                     searchTimeout = setTimeout(() => performSearch(), 500);
@@ -187,9 +209,9 @@
                 const data = await response.json();
 
                 if (data.results && data.results.length > 0) {
-                    document.getElementById('resultCount').textContent = 
+                    document.getElementById('resultCount').textContent =
                         `Found ${data.results.length} result${data.results.length > 1 ? 's' : ''}`;
-                    
+
                     resultsDiv.innerHTML = data.results.map((result, idx) => `
                         <div class="result-item">
                             <div class="result-header">
@@ -231,12 +253,12 @@
             }
         }
 
-        window.showUploadModal = function() {
+        window.showUploadModal = function () {
             const content = `
                 <h3>Upload Documents</h3>
                 <div class="upload-section-modal">
                     <div class="upload-box" id="uploadBoxModal">
-                        <input type="file" id="fileInputModal" multiple accept=".pdf,.docx,.txt" hidden>
+                        <input type="file" id="fileInputModal" multiple accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" hidden>
                         <div class="upload-content">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/>
@@ -244,7 +266,7 @@
                                 <line x1="12" y1="12" x2="12" y2="21"/>
                             </svg>
                             <p>Drag & drop files or click to browse</p>
-                            <span>Supports PDF, DOCX, TXT (max 16MB each)</span>
+                            <span>Supports PDF, DOCX, TXT, PNG, JPG (max 16MB each)</span>
                         </div>
                     </div>
                     <div id="fileListModal" class="file-list"></div>
@@ -255,7 +277,7 @@
             setupUploadModal();
         };
 
-        window.showConfigModal = function() {
+        window.showConfigModal = function () {
             const content = `
                 <h3>Configuration Settings</h3>
                 <div class="config-form">
@@ -303,7 +325,7 @@
             showModal('', content);
         };
 
-        window.saveConfiguration = async function() {
+        window.saveConfiguration = async function () {
             const newConfig = {
                 model_repo_id: document.getElementById('modelRepoId').value,
                 chunk_size: parseInt(document.getElementById('chunkSize').value),
@@ -321,10 +343,10 @@
                 });
 
                 const data = await response.json();
-                
+
                 if (data.success) {
                     currentConfig = data.config;
-                    
+
                     if (data.needs_rebuild && hasDocuments) {
                         showRebuildConfirmation();
                     } else {
@@ -381,11 +403,11 @@
             }
         }
 
-        window.showDocumentsModal = async function() {
+        window.showDocumentsModal = async function () {
             try {
                 const response = await fetch('/documents');
                 const data = await response.json();
-                
+
                 if (data.documents && data.documents.length > 0) {
                     const content = `
                         <h3>Your Documents</h3>
@@ -403,10 +425,10 @@
                                 </thead>
                                 <tbody>
                                     ${data.documents.map((doc, idx) => {
-                                        const uploadDate = new Date(doc.uploaded_on);
-                                        const formattedDate = uploadDate.toLocaleDateString() + ' ' + 
-                                                            uploadDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                                        return `
+                        const uploadDate = new Date(doc.uploaded_on);
+                        const formattedDate = uploadDate.toLocaleDateString() + ' ' +
+                            uploadDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        return `
                                             <tr>
                                                 <td data-label="Sr. No">${idx + 1}</td>
                                                 <td data-label="Document Name">${doc.filename}</td>
@@ -419,7 +441,7 @@
                                                 </td>
                                             </tr>
                                         `;
-                                    }).join('')}
+                    }).join('')}
                                 </tbody>
                             </table>
                         </div>
@@ -433,11 +455,11 @@
             }
         };
 
-        window.viewDocument = async function(docId) {
+        window.viewDocument = async function (docId) {
             try {
                 const response = await fetch(`/documents/${docId}`);
                 const data = await response.json();
-                
+
                 if (data.content) {
                     const content = `
                         <h3>${data.filename}</h3>
@@ -461,11 +483,11 @@
             }
         };
 
-        window.viewSourceDocument = async function(docId) {
+        window.viewSourceDocument = async function (docId) {
             viewDocument(docId);
         };
 
-        window.confirmDelete = function(docId, filename) {
+        window.confirmDelete = function (docId, filename) {
             const content = `
                 <div class="confirm-dialog">
                     <h3>Confirm Delete</h3>
@@ -480,11 +502,11 @@
             showModal('', content);
         };
 
-        window.deleteDocument = async function(docId) {
+        window.deleteDocument = async function (docId) {
             try {
                 const response = await fetch(`/documents/${docId}`, { method: 'DELETE' });
                 const data = await response.json();
-                
+
                 if (data.success) {
                     showToast('Document deleted successfully', 'success');
                     if (data.metadata.documents.length === 0) {
@@ -548,7 +570,7 @@
                 uploadBtn.style.display = 'block';
             }
 
-            window.removeModalFile = function(idx) {
+            window.removeModalFile = function (idx) {
                 modalFiles.splice(idx, 1);
                 displayFiles();
             };
@@ -588,4 +610,5 @@
         }
     </script>
 </body>
+
 </html>
