@@ -137,8 +137,8 @@ context-search-engine/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/inboxpraveen/context-search-engine.git
-   cd context-search-engine
+   git clone https://github.com/siwa-co/Context-Search-Engine-main.git
+   cd Context-Search-Engine-main
    ```
 
 2. **Install dependencies**
@@ -441,7 +441,7 @@ We welcome contributions from everyone! Whether you're fixing a bug, adding a fe
 
 ### Reporting Issues
 
-Found a bug or have a suggestion? [Open an issue](https://github.com/inboxpraveen/context-search-engine/issues) with:
+Found a bug or have a suggestion? [Open an issue](https://github.com/siwa-co/Context-Search-Engine-main/issues) with:
 
 - **Clear title** describing the issue
 - **Detailed description** with context
@@ -499,24 +499,12 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - State significant changes made
 - Include the full license text in distributions
 
-## 🙏 Acknowledgments
-
-This project stands on the shoulders of giants:
-
-- **[Hugging Face](https://huggingface.co/)**: For the amazing Transformers library and model hub
-- **[Facebook AI](https://ai.facebook.com/)**: For FAISS vector search library
-- **[Flask Team](https://flask.palletsprojects.com/)**: For the excellent web framework
-- **[PyPDF2](https://pypdf2.readthedocs.io/)**: For PDF processing capabilities
-- **[python-docx](https://python-docx.readthedocs.io/)**: For Word document support
-- **Open Source Community**: For all the supporting libraries and tools
-
-Special thanks to all contributors and users who provide feedback and help improve this project!
 
 ## 📬 Contact & Support
 
 ### Get Help
-- **Issues**: [GitHub Issues](https://github.com/inboxpraveen/context-search-engine/issues)
-- **Email**: [inboxpraveen.17@gmail.com](mailto:inboxpraveen.17@gmail.com)
+- **Issues**: [GitHub Issues](https://github.com/siwa-co/Context-Search-Engine-main/issues)
+- **Email**: [ih403020@gmail.com](mailto:ih403020@gmail.com)
 
 ### Stay Updated
 - **Watch** this repo for updates
@@ -524,14 +512,7 @@ Special thanks to all contributors and users who provide feedback and help impro
 - **Fork** to experiment and contribute
 - **Share** with others who might benefit
 
-## 🌟 Star History
-
-If this project helped you learn something new or solved a problem, please consider giving it a star!
-
-[![Star History Chart](https://api.star-history.com/svg?repos=inboxpraveen/context-search-engine&type=Date)](https://star-history.com/#inboxpraveen/context-search-engine&Date)
-
----
 
 **Version 2.0.0** | Made with ❤️ for learners, researchers, and developers exploring the world of semantic search.
 
-**[View Changelog](CHANGELOG.md)** | **[Contributing Guide](CONTRIBUTING.md)** | **[Report Bug](https://github.com/inboxpraveen/context-search-engine/issues)** | **[Request Feature](https://github.com/inboxpraveen/context-search-engine/issues)**
+

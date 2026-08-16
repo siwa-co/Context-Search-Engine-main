@@ -123,7 +123,7 @@ There are many ways you can contribute to this project:
 
 3. **Add upstream remote**
    ```bash
-   git remote add upstream https://github.com/inboxpraveen/context-search-engine.git
+   git remote add upstream https://github.com/siwa-co/Context-Search-Engine-main.git
    ```
 
 4. **Create a virtual environment** (recommended)
@@ -151,7 +151,7 @@ There are many ways you can contribute to this project:
 ### Understanding the Project Structure
 
 ```
-context-search-engine/
+Context-Search-Engine-main/
 │
 ├── app.py                      # Flask application & API endpoints
 ├── document_processor.py       # Core logic: embedding, indexing, search
@@ -897,7 +897,7 @@ When making significant changes, update CHANGELOG.md:
 
 - **GitHub Issues**: For bug reports and feature requests
 - **Discussions**: For questions and general discussion (if enabled)
-- **Email**: [inboxpraveen.17@gmail.com](mailto:inboxpraveen.17@gmail.com)
+- **Email**: [ih403020@gmail.com](mailto:ih403020@gmail.com)
 
 ### Staying Updated
 
@@ -964,7 +964,7 @@ Happy coding! 🚀
 
 ---
 
-**Questions?** Feel free to open an issue or reach out via email at [inboxpraveen.17@gmail.com](mailto:inboxpraveen.17@gmail.com).
+**Questions?** Feel free to open an issue or reach out via email at [ih403020@gmail.com](mailto:ih403020@gmail.com).
 
 **Want to contribute but not sure where to start?** Look for issues labeled `good first issue` or `help wanted`!
 
